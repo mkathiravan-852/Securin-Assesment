@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <link rel="stylesheet" href="Details style.css">
+    <style>
+        .details p {
+            margin: 0; /* Optional: to remove default margins */
+        }
+    </style>
+</head>
+<body>
+    <h2 id="cveNumber">CVE number</h2>
+    <h4>Description:</h4><br>
+    <p id="description"></p>
+    <h4>CVSS V2 Metrics:</h4><br>
+    <p class="details"><span id="one">Access Vector: </span><span id="accessVector"></span></p>
+    <p class="details"><span id="two">Score: </span><span id="score"></span></p>
+    <p class="details"><span id="three">Vector String: </span><span id="vectorString"></span></p>
+    <table border="3" id="cvssMetricsTable">
+        <thead>
+            <tr>
+                <th>Access Vector</th>
+                <th>Access Complexity</th>
+                <th>Authentication</th>
+                <th>Confidentiality Impact</th>
+                <th>Integrity Impact</th>
+                <th>Availability Impact</th>
+            </tr>
+        </thead>
+        <tbody id="cvssMetricsBody">
+            <!-- Table body will be populated dynamically -->
+        </tbody>
+    </table>
+    <h4>Scores:</h4><br>
+    <p class="details"><span id="four">Exploitability Score: </span><span id="exploitabilityScore"></span></p>
+    <p class="details"><span id="five">Impact Score: </span><span id="impactScore"></span></p>
+    <h4>CPE:</h4>
+    <table border="3" id="cpeTable">
+        <thead>
+            <tr>
+                <th>Criteria</th>
+                <th>MatchCriteriaId </th>
+                <th>Vulnerable</th>
+            </tr>
+        </thead>
+        <tbody id="cpeBody">
+            <!-- Table body will be populated dynamically -->
+        </tbody>
+    </table>
+    <script>
+        // Extract the CVE ID from the query parameter
+const urlParams = new URLSearchParams(window.location.search);
+const cveId = urlParams.get('cve.cve.id');
+
+// Fetch data based on the CVE ID and update the HTML accordingly
+fetch(`http://127.0.0.1:5000/api/cve/${cveId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(responseData => {
+        // Update HTML with fetched data
+        document.getElementById("description").textContent = responseData.vulnerabilities[0].cve.descriptions[0].value;
+        // Add code to populate other fields like CVSS metrics, scores, CPE, etc.
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+        
+    </script>
+
+    <script src="details Script.js"></script>
+
+</body>
+</html>
